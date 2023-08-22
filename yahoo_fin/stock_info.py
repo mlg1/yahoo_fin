@@ -33,16 +33,16 @@ default_headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1
 def build_url(ticker, start_date = None, end_date = None, interval = "1d", includePrePost = False):
 
     if end_date is None:
-        end_seconds = int(pd.Timestamp("now").timestamp())
+        end_seconds = int(pd.Timestamp('now', tz='UTC').timestamp())
 
     else:
-        end_seconds = int(pd.Timestamp(end_date).timestamp())
+        end_seconds = int(pd.Timestamp(end_date, tz='UTC').timestamp())
 
     if start_date is None:
         start_seconds = 7223400
 
     else:
-        start_seconds = int(pd.Timestamp(start_date).timestamp())
+        start_seconds = int(pd.Timestamp(start_date, tz='UTC').timestamp())
 
     site = base_url + ticker
 
@@ -920,7 +920,7 @@ def get_earnings_for_date(date, offset = 0, count = 1):
     if offset >= count:
         return []
 
-    temp = pd.Timestamp(date)
+    temp = pd.Timestamp(date, tz='UTC')
     date = temp.strftime("%Y-%m-%d")
 
     dated_url = '{0}?day={1}&offset={2}&size={3}'.format(
@@ -953,10 +953,10 @@ def get_earnings_in_date_range(start_date, end_date):
 
         earnings_data = []
 
-        days_diff = pd.Timestamp(end_date) - pd.Timestamp(start_date)
+        days_diff = pd.Timestamp(end_date, tz='UTC') - pd.Timestamp(start_date, tz='UTC')
         days_diff = days_diff.days
 
-        current_date = pd.Timestamp(start_date)
+        current_date = pd.Timestamp(start_date, tz='UTC')
 
         dates = [current_date + datetime.timedelta(diff) for diff in range(days_diff + 1)]
         dates = [d.strftime("%Y-%m-%d") for d in dates]
